@@ -169,3 +169,18 @@ Next, we need to grant all access rights to the Kerberos database to admin princ
 ![Screenshot 2024-01-14 152241](https://github.com/Nourbh17/kerberos2/assets/92574404/aeecb2e0-ea5b-47dd-b6ed-7a53c498e90d)
 
 
+# Keytab Creation : 
+To establish authentication between a Kerberos client and server without requiring user interaction, a keytab file is used. This file contains the principal and its associated key, allowing services to authenticate without user input.
+
+## 1-Generate a Keytab File:
+
+Use the ktutil utility to create a keytab file. This utility is commonly available on systems with Kerberos installed.
+
+## 2-Verify the algorithm used :
+
+![algo cherché ](https://github.com/Nourbh17/kerberos2/assets/92574404/127fac55-d1eb-495a-8475-63b8dc93875d)
+
+## 3-Add a Principal to the Keytab:
+Inside ktutil, assign  a key to root/admin. 
+
+![keytab](https://github.com/Nourbh17/kerberos2/assets/92574404/2b159011-0f0a-4232-9da6-fb4e27fbfcf8)
