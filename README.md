@@ -124,6 +124,7 @@ The stash file is often associated with securing the Kerberos database. It's typ
 In other words, during the Kerberos server configuration, the master key of the KDC is often stored in a stash file. This file needs to be protected as it contains sensitive information.
 
 kadm5.acl:
+
 The kadm5.acl file specifies access rules for administering the Kerberos server. It determines which individuals or principals have the right to perform administrative operations on the Kerberos database. Administrative operations include creating principals, modifying password policies, etc.
 
 
@@ -170,6 +171,7 @@ Next, we need to grant all access rights to the Kerberos database to admin princ
 
 
 # Keytab Creation : 
+
 To establish authentication between a Kerberos client and server without requiring user interaction, a keytab file is used. This file contains the principal and its associated key, allowing services to authenticate without user input.
 
 ## 1-Generate a Keytab File:
@@ -195,3 +197,6 @@ we also add the host :
 ![Screenshot 2024-01-14 180207](https://github.com/Nourbh17/kerberos2/assets/92574404/9ddbe668-b721-4b01-b3d2-b5f93f7321fc)
 
 
+
+
+# SSH Authentication : 
