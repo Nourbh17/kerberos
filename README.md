@@ -96,7 +96,7 @@ krb5-config : provides configuration files and scripts for setting up and managi
 ![Screenshot 2024-01-14 151651](https://github.com/Nourbh17/kerberos2/assets/92574404/2c0c17fb-0cc7-46eb-9d9b-d1cb6c3009ad)
 
 
-## 2-Configuration (Realm / )
+## 2-Configuration :
 We now execute this command :
 
 `sudo krb5_newrealm`
@@ -116,8 +116,6 @@ We find that these files were created :
 
 ![Screenshot 2024-01-14 152044](https://github.com/Nourbh17/kerberos2/assets/92574404/5abcd088-d30e-4c27-9051-0df22d47dfcd) 
 
-kadm5.acl:
-The kadm5.acl file specifies access rules for administering the Kerberos server. It determines which individuals or principals have the right to perform administrative operations on the Kerberos database. Administrative operations include creating principals, modifying password policies, etc.
 
 stash:
 
@@ -125,8 +123,49 @@ The stash file is often associated with securing the Kerberos database. It's typ
 
 In other words, during the Kerberos server configuration, the master key of the KDC is often stored in a stash file. This file needs to be protected as it contains sensitive information.
 
+kadm5.acl:
+The kadm5.acl file specifies access rules for administering the Kerberos server. It determines which individuals or principals have the right to perform administrative operations on the Kerberos database. Administrative operations include creating principals, modifying password policies, etc.
+
+
 ![Screenshot 2024-01-14 152241](https://github.com/Nourbh17/kerberos2/assets/92574404/aeecb2e0-ea5b-47dd-b6ed-7a53c498e90d)
 
 
 
+## Adding The Principals: 
 
+Here is the list of principals before adding new ones :
+
+![Screenshot 2024-01-14 152738](https://github.com/Nourbh17/kerberos2/assets/92574404/34ee8353-4889-4a5a-9db1-2113838417a8)
+
+We start with the user principals:
+
+`sudo kadmin.local`
+
+`kadmin.local:  add_principal user1`
+
+
+We can verify that the principal is created
+
+`kadmin.local:  list_principals`
+
+![Screenshot 2024-01-14 153334](https://github.com/Nourbh17/kerberos2/assets/92574404/f2e6b7ce-0376-4f7d-a939-01771a489a1d)
+
+we can verify the details of the principal created : 
+
+![Screenshot 2024-01-14 153635](https://github.com/Nourbh17/kerberos2/assets/92574404/cf0b723f-a514-45b8-a3a4-ddb4c87a4263)
+
+![Screenshot 2024-01-14 153843](https://github.com/Nourbh17/kerberos2/assets/92574404/0738a694-6fa1-4735-aa1c-0002dafa43f7)
+
+
+Next, we need to grant all access rights to the Kerberos database to admin principal root/admin in the configuration file /etc/krb5kdc/kadm5.acl
+
+sudo nano /etc/krb5kdc/kadm5.acl
+Realm
+
+Now we create the other 2 principals with theses 2 commands :
+
+kadmin.local:  add_principal safa
+kadmin.local:  add_principal postgres/pg.insat.tn
+Now we verify if they were added successfully
+
+kadmin.local:  list_principals
