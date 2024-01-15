@@ -127,17 +127,16 @@ kadm5.acl:
 The kadm5.acl file specifies access rules for administering the Kerberos server. It determines which individuals or principals have the right to perform administrative operations on the Kerberos database. Administrative operations include creating principals, modifying password policies, etc.
 
 
-![Screenshot 2024-01-14 152241](https://github.com/Nourbh17/kerberos2/assets/92574404/aeecb2e0-ea5b-47dd-b6ed-7a53c498e90d)
 
 
 
-## Adding The Principals: 
+# Adding The Principals: 
 
 Here is the list of principals before adding new ones :
 
 ![Screenshot 2024-01-14 152738](https://github.com/Nourbh17/kerberos2/assets/92574404/34ee8353-4889-4a5a-9db1-2113838417a8)
 
-We start with the user principals:
+We start with the user principal:
 
 `sudo kadmin.local`
 
@@ -154,18 +153,19 @@ we can verify the details of the principal created :
 
 ![Screenshot 2024-01-14 153635](https://github.com/Nourbh17/kerberos2/assets/92574404/cf0b723f-a514-45b8-a3a4-ddb4c87a4263)
 
-![Screenshot 2024-01-14 153843](https://github.com/Nourbh17/kerberos2/assets/92574404/0738a694-6fa1-4735-aa1c-0002dafa43f7)
+![Screenshot 2024-01-14 153843](https://github.com/Nourbh17/kerberos2/assets/92574404/1188e1e5-642e-40b9-b81a-d011807a5ce4)
+
+![Screenshot 2024-01-14 154246](https://github.com/Nourbh17/kerberos2/assets/92574404/7153e20e-5511-4dc7-b67e-0116e606dbcd)
+
+Now we create the admin principal:
+
+`kadmin.local:  add_principal root/admin`
 
 
 Next, we need to grant all access rights to the Kerberos database to admin principal root/admin in the configuration file /etc/krb5kdc/kadm5.acl
 
-sudo nano /etc/krb5kdc/kadm5.acl
-Realm
+`sudo nano /etc/krb5kdc/kadm5.acl`
 
-Now we create the other 2 principals with theses 2 commands :
+![Screenshot 2024-01-14 152241](https://github.com/Nourbh17/kerberos2/assets/92574404/aeecb2e0-ea5b-47dd-b6ed-7a53c498e90d)
 
-kadmin.local:  add_principal safa
-kadmin.local:  add_principal postgres/pg.insat.tn
-Now we verify if they were added successfully
 
-kadmin.local:  list_principals
