@@ -48,7 +48,7 @@ Client: 192.168.56.101
 
 ## 4-Adding IP Adresses in /etc/hosts files
 
-The next step is to add the IP adresses of the three machines in /etc/hosts files. We execute this command :
+The next step is to add the IP adresses of the two machines in /etc/hosts files. We execute this command :
 
 `sudo gedit /etc/hosts`
 
@@ -56,7 +56,11 @@ The next step is to add the IP adresses of the three machines in /etc/hosts file
 ![aa](https://github.com/Nourbh17/kerberos2/assets/92574404/da67517c-7939-4a73-983c-a2ed4def43e5)
 
 
+now we can test the communication with:
+`ping client` 
+`ping kdc`
 
+![aa](https://github.com/Nourbh17/kerberos2/assets/92574404/2290d3b4-187b-4c42-a056-d19f3da3d95e)
 
 
 
