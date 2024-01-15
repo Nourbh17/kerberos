@@ -23,12 +23,15 @@ Clock synchronization is crucial in the context of Kerberos due to how the proto
 
 ![Screenshot 2024-01-14 144632](https://github.com/Nourbh17/kerberos2/assets/92574404/3fbde299-f6e7-4c8f-9cad-bfd30abbf7bf)
 
-## 2 Changing Hostnames : We start by executing this command
+## 2 Changing Hostnames : 
+We start by executing this command
 
 `hostnamectl --static set-hostname kdc.example.com`
+
 ![hostname1](https://github.com/Nourbh17/kerberos2/assets/92574404/06d45841-cc56-4b3e-a3aa-3b6389471dc7)
 
 We do the same for the client machine
+
 ![hostname2](https://github.com/Nourbh17/kerberos2/assets/92574404/c1d6b310-053c-485b-80ab-c66dfb79cc66)
 
 
