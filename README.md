@@ -174,7 +174,7 @@ To establish authentication between a Kerberos client and server without requiri
 
 ## 1-Generate a Keytab File:
 
-Use the ktutil utility to create a keytab file. This utility is commonly available on systems with Kerberos installed.
+Use the ktutil utility to create a keytab file. 
 
 ## 2-Verify the algorithm used :
 
@@ -184,3 +184,12 @@ Use the ktutil utility to create a keytab file. This utility is commonly availab
 Inside ktutil, assign  a key to root/admin. 
 
 ![keytab](https://github.com/Nourbh17/kerberos2/assets/92574404/2b159011-0f0a-4232-9da6-fb4e27fbfcf8)
+
+
+![Screenshot 2024-01-14 164310](https://github.com/Nourbh17/kerberos2/assets/92574404/81c967e7-f904-4d46-be90-8705dd9a4b6f)
+
+![Screenshot 2024-01-14 170514](https://github.com/Nourbh17/kerberos2/assets/92574404/ed367fa8-24c9-4e56-aa4d-d1ab3eee3614)
+
+![Screenshot 2024-01-14 180207](https://github.com/Nourbh17/kerberos2/assets/92574404/9ddbe668-b721-4b01-b3d2-b5f93f7321fc)
+
+
