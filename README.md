@@ -14,6 +14,9 @@ Kerberos is a network authentication protocol designed to provide secure authent
 6.At this point, the client gains access to the requested service, leveraging the provided service ticket.
 ![Capture6663](https://github.com/Nourbh17/kerberos2/assets/92574404/92db684c-8bf1-4036-b4ae-996d96623549)
 
+
+
+
 # Environment Preparation and Initial System Configuration :
 ## 1-Clock synchronization : 
 We begin by verifying and synchronizing the clocks of the two machines : 
@@ -67,4 +70,33 @@ now we can test the communication with:
 ![Screenshot 2024-01-14 144442](https://github.com/Nourbh17/kerberos2/assets/92574404/6d319a83-998d-42eb-b2ee-5ff49d303bdb)
 
 
+
+
+# Installation and Configuration of Kerberos Server :
+
+## 1-Installation :
+
+ We first start exectuing these commands in order to install krb5-kdc, krb5-admin-server and krb5-config libraries needed for this step:
+
+`sudo apt-get update`
+
+`sudo apt-get install krb5-kdc krb5-admin-server krb5-config`
+
+![Screenshot 2024-01-14 150812](https://github.com/Nourbh17/kerberos2/assets/92574404/fe4d17a4-2561-4737-a224-36d83e38b68d)
+
+krb5-kdc : provides the central authentication server for Kerberos.
+krb5-admin-server : provides the administration server for the KDC.
+krb5-config : provides configuration files and scripts for setting up and managing a Kerberos realm.
+
+![Screenshot 2024-01-14 151327](https://github.com/Nourbh17/kerberos2/assets/92574404/2e20fb00-afe9-452c-849c-18558b4a3a58)
+
+![Screenshot 2024-01-14 151651](https://github.com/Nourbh17/kerberos2/assets/92574404/2c0c17fb-0cc7-46eb-9d9b-d1cb6c3009ad)
+
+
+## 2-Configuration (Realm / )
+We now execute this command :
+
+`sudo krb5_newrealm`
+
+This command create a new Kerberos realm on a server. It will create new Kerberos database and administration server key, generate a new Kerberos configuration file for the new realm and set up the initial set of administrative principals and policies for the new realm.
 
