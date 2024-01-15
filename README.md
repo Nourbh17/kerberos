@@ -57,11 +57,14 @@ The next step is to add the IP adresses of the two machines in /etc/hosts files.
 
 
 now we can test the communication with:
+
 `ping client` 
+
 `ping kdc`
 
-![aa](https://github.com/Nourbh17/kerberos2/assets/92574404/2290d3b4-187b-4c42-a056-d19f3da3d95e)
+![Screenshot 2024-01-14 144402](https://github.com/Nourbh17/kerberos2/assets/92574404/746ace56-5fbf-4652-9ab3-9e9b7b006d05)
 
+![Screenshot 2024-01-14 144442](https://github.com/Nourbh17/kerberos2/assets/92574404/6d319a83-998d-42eb-b2ee-5ff49d303bdb)
 
 
 
