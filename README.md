@@ -15,11 +15,24 @@ Kerberos is a network authentication protocol designed to provide secure authent
 ![Capture6663](https://github.com/Nourbh17/kerberos2/assets/92574404/92db684c-8bf1-4036-b4ae-996d96623549)
 
 # Environment Preparation and Initial System Configuration :
-
+## 1 Clock synchronization : 
 We begin by verifying and synchronizing the clocks of the two machines : 
 
 Clock synchronization is crucial in the context of Kerberos due to how the protocol manages ticket validity periods. Kerberos relies on timestamps to ensure the security and authenticity of exchanges between parties.
 ![Screenshot 2024-01-14 144614](https://github.com/Nourbh17/kerberos2/assets/92574404/7b35013d-860f-452f-aa41-9cf4c448e348)
 
 ![Screenshot 2024-01-14 144632](https://github.com/Nourbh17/kerberos2/assets/92574404/3fbde299-f6e7-4c8f-9cad-bfd30abbf7bf)
+
+## 2 Changing Hostnames : We start by executing this command
+
+`hostnamectl --static set-hostname kdc.example.com`
+![hostname1](https://github.com/Nourbh17/kerberos2/assets/92574404/06d45841-cc56-4b3e-a3aa-3b6389471dc7)
+
+We do the same for the client machine
+![hostname2](https://github.com/Nourbh17/kerberos2/assets/92574404/c1d6b310-053c-485b-80ab-c66dfb79cc66)
+
+
+
+
+
 
