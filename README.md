@@ -40,12 +40,20 @@ Now we need to get the IP Adresses of all the two machines:
 
 KDC: 192.168.56.102
 Client: 192.168.56.101
+
 ![ad ip](https://github.com/Nourbh17/kerberos2/assets/92574404/46791893-d9c1-41c0-a98e-fb0796bc54f6)
 
-
-
-
 ![ip2](https://github.com/Nourbh17/kerberos2/assets/92574404/ae6c68e1-6d12-4752-a115-54d8e2c4a791)
+
+
+## 4-Adding IP Adresses in /etc/hosts files
+
+The next step is to add the IP adresses of the three machines in /etc/hosts files. We execute this command :
+
+`sudo gedit /etc/hosts`
+
+
+![aa](https://github.com/Nourbh17/kerberos2/assets/92574404/da67517c-7939-4a73-983c-a2ed4def43e5)
 
 
 
