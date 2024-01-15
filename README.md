@@ -18,6 +18,7 @@ Kerberos is a network authentication protocol designed to provide secure authent
 
 
 # Environment Preparation and Initial System Configuration :
+
 ## 1-Clock synchronization : 
 We begin by verifying and synchronizing the clocks of the two machines : 
 
@@ -85,7 +86,9 @@ now we can test the communication with:
 ![Screenshot 2024-01-14 150812](https://github.com/Nourbh17/kerberos2/assets/92574404/fe4d17a4-2561-4737-a224-36d83e38b68d)
 
 krb5-kdc : provides the central authentication server for Kerberos.
+
 krb5-admin-server : provides the administration server for the KDC.
+
 krb5-config : provides configuration files and scripts for setting up and managing a Kerberos realm.
 
 ![Screenshot 2024-01-14 151327](https://github.com/Nourbh17/kerberos2/assets/92574404/2e20fb00-afe9-452c-849c-18558b4a3a58)
@@ -99,4 +102,31 @@ We now execute this command :
 `sudo krb5_newrealm`
 
 This command create a new Kerberos realm on a server. It will create new Kerberos database and administration server key, generate a new Kerberos configuration file for the new realm and set up the initial set of administrative principals and policies for the new realm.
+
+When installing the packages, some prompts will appear in order to configure the KDC server
+
+Realm : EXAMPLE.COM (must be in uppercase) 
+
+Kerberos server : kdc.example.com 
+
+Administrative server : kdc.example.com (in our case it's the same as the kdc server)
+
+
+We find that these files were created : 
+
+![Screenshot 2024-01-14 152044](https://github.com/Nourbh17/kerberos2/assets/92574404/5abcd088-d30e-4c27-9051-0df22d47dfcd) 
+
+kadm5.acl:
+The kadm5.acl file specifies access rules for administering the Kerberos server. It determines which individuals or principals have the right to perform administrative operations on the Kerberos database. Administrative operations include creating principals, modifying password policies, etc.
+
+stash:
+
+The stash file is often associated with securing the Kerberos database. It's typically a stash file used to securely store the master key of the Kerberos Key Distribution Center (KDC).
+
+In other words, during the Kerberos server configuration, the master key of the KDC is often stored in a stash file. This file needs to be protected as it contains sensitive information.
+
+![Screenshot 2024-01-14 152241](https://github.com/Nourbh17/kerberos2/assets/92574404/aeecb2e0-ea5b-47dd-b6ed-7a53c498e90d)
+
+
+
 
