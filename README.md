@@ -248,6 +248,7 @@ Then, when you attempt to SSH into 'kdc.example.com', the user should be able to
 # Configure the client machine:
 
 Perform the same steps by installing Kerberos (krb5-user) and configuring it.
+
 Verify the krb5.conf file as shown in the screenshot below:
 
 ![Screenshot 2024-01-14 192119](https://github.com/Nourbh17/kerberos/assets/92574404/14fff732-f100-4a11-8a05-3941f8c3463e)
@@ -274,11 +275,15 @@ On the KDC machine, view the log of the client machine accessing it :
 ![Screenshot 2024-01-14 194849](https://github.com/Nourbh17/kerberos/assets/92574404/a3a861d8-d482-4396-a1c7-ead0f0c099f8)
 
 Perform a simple test:
+
 On the KDC machine, echo the hostname into a file. 
+
 Test on the client machine to verify the consistency of results. 
 
 KDC Machine: 
+
 ![Screenshot 2024-01-14 195230](https://github.com/Nourbh17/kerberos/assets/92574404/07689e16-062e-4cfe-8e1a-b4beb11ab7da)
+
 Client Machine: 
 
 ![Screenshot 2024-01-14 195244](https://github.com/Nourbh17/kerberos/assets/92574404/3ac67ed9-48d2-4f0a-a4a8-5f08692fc51b)
