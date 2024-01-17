@@ -220,7 +220,7 @@ By uncommenting these lines in the SSH configuration files (sshd_config for the 
 
 ![sshd](https://github.com/Nourbh17/kerberos/assets/92574404/08c2edc4-32ae-4f00-bcd9-b64c0565cec5)
 
-
+## 3-Authentication
 Firstly, verify the list of principals (user and admin) and check the keytab associated with root/admin. 
 
 ![principals+ajoutkeytab](https://github.com/Nourbh17/kerberos/assets/92574404/0fae95e6-50ba-492d-a1a5-b329064e6f19)
@@ -229,7 +229,7 @@ Create the host and add the keytab for the host.
 
 ![add host](https://github.com/Nourbh17/kerberos/assets/92574404/4869010a-23f8-4764-95bd-194ec6791334)
 
-Then, add a user. Initially, when attempting to access kds.example.com, the user will enter the password 
+Then, add a user. Initially, when attempting to access kds.example.com, the user need to enter the password 
 
 ![faire un user](https://github.com/Nourbh17/kerberos/assets/92574404/7e5c8ac2-8c09-46b8-a6bc-43743a557ddf)
 
@@ -245,6 +245,40 @@ Then, when you attempt to SSH into 'kdc.example.com', the user should be able to
 
 ![le user a bien acceder a cette machine](https://github.com/Nourbh17/kerberos/assets/92574404/59e76768-59b6-4db9-9765-9fbfabdae09e)
 
+# Configure the client machine:
+
+Perform the same steps by installing Kerberos (krb5-user) and configuring it.
+Verify the krb5.conf file as shown in the screenshot below:
+
+![Screenshot 2024-01-14 192119](https://github.com/Nourbh17/kerberos/assets/92574404/14fff732-f100-4a11-8a05-3941f8c3463e)
+
+Then, install OpenSSH server and modify the configuration files, similar to what was done on the KDC machine
+ 
+Add a user and attempt to access the machine. Initially, there is no ticket.
+
+Access 'kdc.example.com' (initially with the password). 
+
+Generate a ticket and confirm its generation, as shown in the screenshot:
 
 
+![Screenshot 2024-01-14 194506](https://github.com/Nourbh17/kerberos/assets/92574404/0facac21-d996-4597-8262-5bc6d8f455d4)
 
+Access the machine  without entering the password, as depicted in the screenshots:
+
+![Screenshot 2024-01-14 194801](https://github.com/Nourbh17/kerberos/assets/92574404/3809f246-7643-4593-afa2-d081ef463089)
+
+On the KDC machine, view the log of the client machine accessing it :
+
+![Screenshot 2024-01-14 194746](https://github.com/Nourbh17/kerberos/assets/92574404/03c5fff1-b531-4b2b-8d80-1d074c81045d)
+
+![Screenshot 2024-01-14 194849](https://github.com/Nourbh17/kerberos/assets/92574404/a3a861d8-d482-4396-a1c7-ead0f0c099f8)
+
+Perform a simple test:
+On the KDC machine, echo the hostname into a file. 
+Test on the client machine to verify the consistency of results. 
+
+KDC Machine: 
+![Screenshot 2024-01-14 195230](https://github.com/Nourbh17/kerberos/assets/92574404/07689e16-062e-4cfe-8e1a-b4beb11ab7da)
+Client Machine: 
+
+![Screenshot 2024-01-14 195244](https://github.com/Nourbh17/kerberos/assets/92574404/3ac67ed9-48d2-4f0a-a4a8-5f08692fc51b)
