@@ -213,6 +213,9 @@ Authentication in SSH can be achieved using various methods, such as password en
 When a user wants to connect to a remote machine via SSH, they can use their Kerberos ticket to authenticate without entering an additional password.
 The Kerberos ticket serves as proof of the user's identity, eliminating the need to share passwords directly with the remote server.
 
+![ssh_1112](https://github.com/Nourbh17/kerberos/assets/92574404/c572607c-2130-4f01-a4b5-3888d871c501)
+
+
 ## 1-Installation :
 
 ![installssh](https://github.com/Nourbh17/kerberos/assets/92574404/9d082a13-99d2-4d97-b210-f576261cc0d8)
