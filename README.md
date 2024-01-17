@@ -201,3 +201,17 @@ we also add the host :
 
 # SSH Authentication : 
 
+## 1-Installation :
+
+![installssh](https://github.com/Nourbh17/kerberos/assets/92574404/9d082a13-99d2-4d97-b210-f576261cc0d8)
+
+## 2-Configuration :
+
+We start by modifying two files: sshd_config and ssh_config, uncommenting these two lines: GSSAPIAuthentication yes and GSSAPICleanupCredentials yes.
+
+"GSSAPIAuthentication yes" enables authentication via the Generic Security Services Application Program Interface (GSSAPI), which is a standard authentication framework used in various systems.
+
+"GSSAPICleanupCredentials yes" specifies that GSSAPI credentials should be cleaned up after the connection. This allows for the release of resources associated with GSSAPI authentication once the connection is terminated.
+
+By uncommenting these lines in the SSH configuration files (sshd_config for the SSH server and ssh_config for the SSH client), we activate GSSAPI authentication. This modification may be necessary in environments where Kerberos ticket-based authentication is used, for example, to enhance SSH access security. It provides an additional authentication method based on the system's security mechanisms, thereby expanding authentication options for users and system administrators.
+
