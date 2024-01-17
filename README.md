@@ -201,6 +201,18 @@ we also add the host :
 
 # SSH Authentication : 
 
+The authentication principle in Kerberos with SSH involves using the Kerberos protocol to establish the identity of users and secure communications over a network. SSH, which stands for Secure Shell, is a secure network protocol that allows secure access to remote machines over an unsecured network. 
+
+### SSH (Secure Shell):
+
+SSH is a secure communication protocol used for encrypted access to remote machines. It is commonly used for remote server administration, secure file transfers, and executing commands on remote machines.
+Authentication in SSH can be achieved using various methods, such as password entry, the use of public/private keys, and also through integration with Kerberos.
+
+### Integration of Kerberos with SSH:
+
+When a user wants to connect to a remote machine via SSH, they can use their Kerberos ticket to authenticate without entering an additional password.
+The Kerberos ticket serves as proof of the user's identity, eliminating the need to share passwords directly with the remote server.
+
 ## 1-Installation :
 
 ![installssh](https://github.com/Nourbh17/kerberos/assets/92574404/9d082a13-99d2-4d97-b210-f576261cc0d8)
