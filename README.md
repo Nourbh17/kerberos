@@ -215,3 +215,36 @@ We start by modifying two files: sshd_config and ssh_config, uncommenting these 
 
 By uncommenting these lines in the SSH configuration files (sshd_config for the SSH server and ssh_config for the SSH client), we activate GSSAPI authentication. This modification may be necessary in environments where Kerberos ticket-based authentication is used, for example, to enhance SSH access security. It provides an additional authentication method based on the system's security mechanisms, thereby expanding authentication options for users and system administrators.
 
+
+![ssh](https://github.com/Nourbh17/kerberos/assets/92574404/e9609a98-7110-4068-b803-3d066168287f)
+
+![sshd](https://github.com/Nourbh17/kerberos/assets/92574404/08c2edc4-32ae-4f00-bcd9-b64c0565cec5)
+
+
+Firstly, verify the list of principals (user and admin) and check the keytab associated with root/admin. 
+
+![principals+ajoutkeytab](https://github.com/Nourbh17/kerberos/assets/92574404/0fae95e6-50ba-492d-a1a5-b329064e6f19)
+
+Create the host and add the keytab for the host.
+
+![add host](https://github.com/Nourbh17/kerberos/assets/92574404/4869010a-23f8-4764-95bd-194ec6791334)
+
+Then, add a user. Initially, when attempting to access kds.example.com, the user will enter the password 
+
+![faire un user](https://github.com/Nourbh17/kerberos/assets/92574404/7e5c8ac2-8c09-46b8-a6bc-43743a557ddf)
+
+
+### Goal :  Enable the user to access without entering a password.
+
+Assigning a ticket to this user involves using the `kinit` command to generate a ticket for 'user1.
+After generating the ticket, you can use the `klist` command to confirm its presence. 
+
+![generer le ticket tgt](https://github.com/Nourbh17/kerberos/assets/92574404/f7725e34-0759-429c-a1ef-ea11bdc65a7b)
+
+Then, when you attempt to SSH into 'kdc.example.com', the user should be able to access the machine without providing a password.
+
+![le user a bien acceder a cette machine](https://github.com/Nourbh17/kerberos/assets/92574404/59e76768-59b6-4db9-9765-9fbfabdae09e)
+
+
+
+
