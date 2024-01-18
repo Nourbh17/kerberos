@@ -113,6 +113,81 @@ to see the changes we run ` ll /etc/ldap/sasl2/`
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/fa36a709-86a7-4c8b-850e-c41a1c10563b)
 
 2-5
+# Partie 2 : Gestion des Services Réseau avec DNS : 
+## What is DNS?
+The Domain Name System (DNS) is the phonebook of the Internet. Humans access information online through domain names, like nytimes.com or espn.com. Web browsers interact through Internet Protocol (IP) addresses. DNS translates domain names to IP addresses so browsers can load Internet resources.
+
+Each device connected to the Internet has a unique IP address which other machines use to find the device. DNS servers eliminate the need for humans to memorize IP addresses such as 192.168.1.1 (in IPv4), or more complex newer alphanumeric IP addresses such as 2400:cb00:2048:1::c629:d7a2 (in IPv6).
+------image--------
+## DNS server configuration:
+### install Bind9: 
+The reference DNS server, BIND (Berkeley Internet Name Domain), is from the Internet Software Consortium.
+`sudo apt-get install bind9`
+### configuration:
+The main configuration of BIND9 is done in the following files:
+
+/etc/bind/named.conf
+/etc/bind/named.conf.options
+/etc/bind/named.conf.local
+
+We will configure a forwarder, which is a DNS server that will handle requests that your server cannot resolve, essentially all requests except those for the zone that we will host for our local machines.
+
+To do this, we will modify named.conf.options with the command:
+
+`sudo nano /etc/bind/named.conf.options`
+
+We uncomment the forwarders block and specify, for example, the IP address of the DNS server provided by the DHCP server of your router. We have set the IP address of a Google DNS like 8.8.8.8 and 8.8.4.4
+------image-----
+To host our own zone as the master server, we will modify the named.conf.local file using the command:
+`sudo nano /etc/bind/named.conf.local`
+----image---
+Then, we need to create the file /etc/bind/local.lan to go along with it. To do this, we will copy db.local, which serves as a reference. You type:
+
+`sudo cp /etc/bind/db.local /etc/bind/local.lan`
+
+Edit the file with
+
+`nano /etc/bind/local.lan`
+
+we need to create the file /etc/bind/inv.lan
+
+sudo cp /etc/bind/db.127 /etc/bind/inv.lan`
+
+Edit the file with
+
+`nano /etc/bind/inv.lan`
+
+Next, we modify the zone. Here we define the Start Of Authority (SOA). For this, we declare ns (for Name server). We also declare a second name, root, here
+
+After defining the SOA, still ns, we also declare one or more A-type records. An A-type record allows mapping a DNS name to an IP address.
+-----image---
+### Add DNS records for OpenLDAP, Apache and OpenVPN:
+we have first to add zoness in named.conf.local
+image
+then records in local.lan
+image
+and then w create the files apache.lan, ldap.lan and openvpn.lan using
+`sudo cp /etc/bind/db.127 /etc/bind/apache.lan`
+`sudo cp /etc/bind/db.127 /etc/bind/ldap.lan`
+`sudo cp /etc/bind/db.127 /etc/bind/openvpn.lan`
+edit them with:
+`nano /etc/bind/apache.lan`
+`nano /etc/bind/ldap.lan`
+`nano /etc/bind/openvpn.lan`
+## testing
+Redémarrer le démon BIND9 avec
+`sudo service bind9 restart`
+
+De là, depuis une autre machine vous pouvez normalement tester la résolution de ns.local.lan
+ Sur une machine windows, on tape dans une invite de commande
+ `nslookup`
+ on Indique à nslookup qu'il doit utiliser votre serveur linux comme serveur dns.
+Le mien à l'ip 192.168.56.102
+`server 192.168.56.102`
+Maintenant tentez de résoudre ns.local.lan
+
+`ns.local.lan`
+Ici on voit que l'ip associée à ns.local.lan a bien été trouvée et affichée
 
 # Introduction : 
 Kerberos is a network authentication protocol designed to provide secure authentication for client-server applications. The primary goal of Kerberos is to enable secure communication over a non-secure network, such as the Internet.
