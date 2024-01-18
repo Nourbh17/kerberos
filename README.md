@@ -4,48 +4,54 @@ to install the server , we run this command :
 
   `sudo apt install slapd ldap-utils`
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/0c44ad45-3976-4113-893f-42c4c52fca21)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/990b96e0-b326-4e48-b1b6-2a206ffe1ceb)
 
 
 to change the Directory Information Tree suffix , we run the following command : 
 
   `sudo dpkg-reconfigure slapd`    we used dc=example,dc=com
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/cb7d5887-a322-4446-8501-2847218f09c5)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/e3ec1c7a-e249-45e3-ba55-9cd6a9d9a471)
 
 ## Create Users and Groups 
 We create the following file called add-users.ldif : 
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/b50aab08-b45e-41c2-b38f-1a3016f957da)
+
 
 Now to implement the change, we run the below command : 
 
-  'ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-users.ldif '
+  `ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-users.ldif `
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/f43893ad-ea70-4fb6-8496-2753e9db82cd)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/b55d0437-b902-430f-9c30-c8c966e926ac)
+
 
 Users have been added to the server .
+
 Now we do the same thing to add groups to the server :
 We create the file called add-groups.ldif file
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/00c2242b-4f44-4182-a879-7803b9253e0c)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/4f6b5d40-13cd-45f1-8551-293681f527c4)
+
 
 we run this command to implement the change : 
 
-  'ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-groups.ldif '
+  `ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-groups.ldif `
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/8bce6f4d-ae4b-47f2-95b8-74be18bc5cef)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/ba9b37a1-83d2-4b61-8f02-341304a8fded)
+
 
 ## Modify Users
 To modify a user , we create a file called modify-user.ldif:
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/1484af39-c087-4d4e-81f5-7d538e6baa36)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/1ffd3630-b021-408e-ab85-61035e64dc57)
+
 
 To implement the changes , we run the following command : 
 
   `ldapmodify -x -D cn=admin,dc=example,dc=com -W -f modify-user.ldif`
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/3723a420-8386-4aa5-9f55-ff6dbf7b5108)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/752dfd05-e2a8-4108-93cc-80a7ea1e666e)
+
 
 ## Certificats
 ### 1- Generate Self Signed SSL certificates
@@ -53,24 +59,29 @@ To implement the changes , we run the following command :
 
   `openssl genrsa -aes128 -out example.com.key 4096 `  
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/8759c772-b385-4784-9391-299552f74be6)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/80caf028-5c15-43ac-a974-6f1d8c80b51c)
+
 
 1-2- Now to remove the passphrase from the generated private key we run 
 
   `openssl rsa -in example.com.key -out example.com.key`
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/b405be97-aca3-46a9-b5d6-1d1dafb930d6)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/e61fad10-6d04-4f0e-8271-15fd5c8b51d3)
+
 
 1-3- Now we generate the request : 
 
   `openssl req -new -days 3650 -key example.com.key -out example.com.csr`
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/d56eb40b-c308-49e3-86ce-57186681dd3b)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/ab708dbd-ebc7-4409-8703-cb223b52c495)
+
 
 1-4- finally, we sign the certificate by running this command : 
 
   `sudo openssl x509 -in example.com.csr -out example.com.crt -req -signkey example.com.key -days 3650`
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/a3eb7e1d-f250-4e7b-8b1a-4471b8182f82)
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/99a9827f-ac0a-4f65-99b5-a568f44e185e)
+
 
 ### 2- Configure SSL on openLDAP Server 
 2-1- Now let's copy the certificates and key to `/etc/ldap/sasl2` directory : 
@@ -79,8 +90,9 @@ We run
   `sudo cp example.com.{key,crt} /etc/ldap/sasl2/
    sudo cp /etc/ssl/certs/ca-certificates.crt /etc/ldap/sasl2`
    
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/47f93d6d-9450-4dc3-8c41-4ffc783881b8)
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/80c29581-9319-4329-83f3-b00fb987e932)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/b245f724-d024-4055-9546-760f51a032f6)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/7bb7d01c-82d7-44cd-ad28-c0c9b54f7a95)
+
 
 2-2- Now we change Ownership of the certificate to openldap User . We run this command
 
@@ -88,17 +100,17 @@ We run
 
 to see the changes we run ` ll /etc/ldap/sasl2/`
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/4436f343-d77e-4c93-bb1f-538c9501c6c3)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/40e77e31-311e-41b4-94c8-39d7c17d48d6)
 
 2-3- We create LDAP configuration file called SSL-LDAP.ldif : 
 
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/08d81695-0ce5-44d7-8a89-0230b2477277)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/685813c7-1fee-4be7-9530-d1778e2524ed)
 
 2-4- To configure LDAP Server to use SSL Certificates , We run :
 
   `sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SSL-LDAP.ldif`
   
-![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/58988653-8914-445e-bece-0fda98984ed4)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/fa36a709-86a7-4c8b-850e-c41a1c10563b)
 
 2-5
 
