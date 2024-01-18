@@ -112,7 +112,108 @@ to see the changes we run ` ll /etc/ldap/sasl2/`
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/fa36a709-86a7-4c8b-850e-c41a1c10563b)
 
-2-5
+2-5- we edit `/etc/default/slapd`.We run  `sudo nano /etc/default/slapd` and we add `ldaps:///` to `SLAPD_SERVICES`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/c3ffcb29-ebf7-4928-92d3-e2b3617f4478)
+
+2-6- we edit `/etc/ldap/ldap.conf`. We run  `sudo nano /etc/ldap/ldap.conf`and we comment line
+
+`TLS_CACERT  etc/ssl/certs/ca-cerificates.crt` and we add 
+` TLS_CACERT  /etc/ldap/sasl2/ca-certificates.crt
+  TLS_REQCERT allow `
+
+  ![image](https://github.com/Nourbh17/kerberos/assets/98901671/15b68a6b-03b4-4ffa-97e8-531bad48e618)
+
+  Finally ,We restart LDAP Server : `sudo systemctl restart slapd`
+
+ ![image](https://github.com/Nourbh17/kerberos/assets/98901671/6227087a-c28c-4ca2-b372-ff02b78c76ab)
+
+### 3- Verify 
+We Verify by executing ldapsearch command : 
+
+`ldapsearch -x -H ldaps://192.168.56.103 -b "dc=example,dc=com" `
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/65db2f4b-18e2-46b6-936d-4949450f1cf4)
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/ee882030-0218-4f56-836c-2c9a51fbe9ce)
+
+It worked 
+
+## Verify user's authentication 
+to verify user1 authentication we run the following command in user1 machine and we enter user1's password
+
+  `ldapwhoami -x -D "uid=user1,ou=People,dc=example,dc=com" -W `
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/e638a3d3-082d-4d1d-a412-84a08bf2e446)
+
+# SSH Authentication
+
+
+# Apache Integration 
+## Install and configure Apache2 
+First we install apache2 by executing this command 
+  
+  `sudo apt-get -y install apache2`
+
+###  Configure SSL setting to use secure encrypt connection 
+after creating certificates for the server, we add these two lines
+
+`SSLCertificateFile /etc/ssl/private/server.crt
+SSLCertificateKeyFile /etc/ssl/private/server.key` 
+
+to `/etc/apache2/sites-available/default-ssl.conf` file 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/4fa2869b-3e60-4ada-804f-a17892699bfa)
+
+
+ then we run this commands 
+ 
+   `a2ensite default-ssl`
+    'a2enmod ssl'
+To activate the new configuration , we run ` sudo systemctl restart apache2`.
+Now we can access to the page from a client computer with a Web browser via HTTPS.
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/36d0717d-1814-4f4d-a92e-f472bad68205)
+
+this screen is shown because Certificates is self-signed but it's no problem,we click on Accept the Risk and Continue 
+
+## Basic Authentication 
+we run this command : `a2enmod ldap authnz_ldap`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/b336c869-8526-463e-89fa-049c61952aac)
+
+we create a new file called `auth-ldap.conf` in  `etc/apache2/sites-availables/` : 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/2d0c5341-e1b8-498e-a209-3d9787d6c518)
+
+We only let the users in group2 (user2) access the page
+we run this command `a2ensite auth-ldap ` and restart apache2 to enable the new configuration by running `sudo systemctl restart apache2` 
+
+Now, we create a new directory called `auth-ldap` in `/var/www/html/` and we create `index.html` in it 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/93200d40-55ea-4635-ab73-1bb48404c6f9)
+
+## Demo 
+when we try to access the page with user1 (not in group2 ) :
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/752592bf-11bb-4e7e-846f-0cb441746c67)
+
+we have to re-enter the username and password cause he's not autorised to access the page 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/6292765a-dfdf-4385-927c-897eb1c5d1d4)
+
+Now, we try to access it with user2 (in group2):
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/27080a07-b07d-435f-8ba6-6396983dcbad)
+
+we access it with user2
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/f1160ec3-b6a9-4c76-a856-b00a2a2df435)
+
+# OpenVpn 
+
+
+
 # Partie 2 : Gestion des Services Réseau avec DNS : 
 ## What is DNS?
 The Domain Name System (DNS) is the phonebook of the Internet. Humans access information online through domain names, like nytimes.com or espn.com. Web browsers interact through Internet Protocol (IP) addresses. DNS translates domain names to IP addresses so browsers can load Internet resources.
