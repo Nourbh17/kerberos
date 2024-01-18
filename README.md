@@ -1,75 +1,103 @@
 # Install and Configure OpenLDAP
 ## Install slapd and change the instance suffix
 to install the server , we run this command :
+
   `sudo apt install slapd ldap-utils`
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/0c44ad45-3976-4113-893f-42c4c52fca21)
 
 
 to change the Directory Information Tree suffix , we run the following command : 
+
   `sudo dpkg-reconfigure slapd`    we used dc=example,dc=com
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/cb7d5887-a322-4446-8501-2847218f09c5)
 
 ## Create Users and Groups 
 We create the following file called add-users.ldif : 
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/b50aab08-b45e-41c2-b38f-1a3016f957da)
 
 Now to implement the change, we run the below command : 
+
   'ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-users.ldif '
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/f43893ad-ea70-4fb6-8496-2753e9db82cd)
 
 Users have been added to the server .
 Now we do the same thing to add groups to the server :
 We create the file called add-groups.ldif file
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/00c2242b-4f44-4182-a879-7803b9253e0c)
 
 we run this command to implement the change : 
+
   'ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-groups.ldif '
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/8bce6f4d-ae4b-47f2-95b8-74be18bc5cef)
 
 ## Modify Users
 To modify a user , we create a file called modify-user.ldif:
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/1484af39-c087-4d4e-81f5-7d538e6baa36)
 
 To implement the changes , we run the following command : 
+
   `ldapmodify -x -D cn=admin,dc=example,dc=com -W -f modify-user.ldif`
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/3723a420-8386-4aa5-9f55-ff6dbf7b5108)
 
 ## Certificats
 ### 1- Generate Self Signed SSL certificates
 1-1- First we create the key by running the following command 
+
   `openssl genrsa -aes128 -out example.com.key 4096 `  
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/8759c772-b385-4784-9391-299552f74be6)
 
 1-2- Now to remove the passphrase from the generated private key we run 
+
   `openssl rsa -in example.com.key -out example.com.key`
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/b405be97-aca3-46a9-b5d6-1d1dafb930d6)
 
 1-3- Now we generate the request : 
+
   `openssl req -new -days 3650 -key example.com.key -out example.com.csr`
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/d56eb40b-c308-49e3-86ce-57186681dd3b)
 
 1-4- finally, we sign the certificate by running this command : 
+
   `sudo openssl x509 -in example.com.csr -out example.com.crt -req -signkey example.com.key -days 3650`
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/a3eb7e1d-f250-4e7b-8b1a-4471b8182f82)
 
 ### 2- Configure SSL on openLDAP Server 
 2-1- Now let's copy the certificates and key to `/etc/ldap/sasl2` directory : 
 We run 
+
   `sudo cp example.com.{key,crt} /etc/ldap/sasl2/
    sudo cp /etc/ssl/certs/ca-certificates.crt /etc/ldap/sasl2`
+   
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/47f93d6d-9450-4dc3-8c41-4ffc783881b8)
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/80c29581-9319-4329-83f3-b00fb987e932)
 
 2-2- Now we change Ownership of the certificate to openldap User . We run this command
+
   `sudo chown -R openldap:openldap /etc/ldap/sasl2/`
+
 to see the changes we run ` ll /etc/ldap/sasl2/`
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/4436f343-d77e-4c93-bb1f-538c9501c6c3)
 
 2-3- We create LDAP configuration file called SSL-LDAP.ldif : 
+
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/08d81695-0ce5-44d7-8a89-0230b2477277)
 
 2-4- To configure LDAP Server to use SSL Certificates , We run :
+
   `sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SSL-LDAP.ldif`
+  
 ![image](https://github.com/Farah-Abdelkefi/ldap/assets/98901671/58988653-8914-445e-bece-0fda98984ed4)
 
 2-5
