@@ -147,8 +147,64 @@ to verify user1 authentication we run the following command in user1 machine and
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/e638a3d3-082d-4d1d-a412-84a08bf2e446)
 
 # SSH Authentication
+## 1- Update schema to enable sshPublicKey attribute 
+Since we will implement key based authentication, we need an attribute that can store public key of the user. There is no attribute available by default to store the public key. Hence we need to define a schema for the same and create an attribute to store the key.
 
+First , We create a file named openssh-lpk.ldif : 
 
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/ebfeeffd-b837-4957-a6b9-34d501fce230)
+
+then we run the below command to implement the change : 
+
+  `sudo ldapadd -Y EXTERNAL -H ldapi:/// -f openssh-lpk.ldif`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/7bb611b2-169e-4dd2-9d12-980754274478)
+
+We have created an attribute named ‘ldapPublicKey’ to store the ssh public key of the users.
+
+## 2- Update user entry with ldapPublicKey
+We create a file named add-sshPublicKey.ldif
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/1223bf70-99f1-4f00-a6af-33fe57b3a00c)
+
+Then we run this command  `sudo ldapmodify -x -D cn=admin,dc=example,dc=com -W -f add-sshPublicKey.ldif `
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/39836726-88af-43a7-a361-f0bf1263c33d)
+
+We have added the user ssh keys as part of sshPublicKey attribute.
+
+We have everything configured at LDAP server end and we are good to configure our Linux client now.
+## 3- Configure Linux Client
+Run the below commands to install the necessary packages in Linux Client.
+
+`sudo apt-get install openssh-server libpam-ldap`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/eb2d3930-7fbb-48bf-913a-3ae548db23e0)
+
+then we edit `sshd_config` in `/etc/ssh/` by running  `sudo nano /etc/ssh/sshd_config`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/56334a75-c156-4c1c-b34b-68a768832f46)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/bc0a3825-6ef2-40a1-9913-db0674dfb6af)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/a3d88c04-e653-455f-afb3-6f8a9e0395a3)
+
+and we edit `sshd` in `/etc/pam/` by running  `sudo nano  /etc/pam.d/sshd`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/db17ef84-4009-4a0d-917a-76a1d8f3d9d5)
+
+and we edit `access.conf` in `/etc/security/` by running  `sudo nano /etc/security/access.conf`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/d1b6cca5-6ba1-4062-93c0-a4a8584e686b)
+
+restart ssh to enable the new configuration by running `sudo systemctl restart ssh`
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/03dc78a8-7843-43d3-99d1-89549d3ae501)
+## 4- Test 
+then we try to test SSH access for an authorized user and an unauthorized user by running these commands in the clients machines 
+
+  `ssh user1@192.168.56.103`
+
+  `ssh user2@192.168.56.103`
+  
 # Apache Integration 
 ## Install and configure Apache2 
 First we install apache2 by executing this command 
@@ -165,12 +221,14 @@ to `/etc/apache2/sites-available/default-ssl.conf` file
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/4fa2869b-3e60-4ada-804f-a17892699bfa)
 
-
  then we run this commands 
  
    `a2ensite default-ssl`
-    'a2enmod ssl'
+   
+    `a2enmod ssl`
+    
 To activate the new configuration , we run ` sudo systemctl restart apache2`.
+
 Now we can access to the page from a client computer with a Web browser via HTTPS.
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/36d0717d-1814-4f4d-a92e-f472bad68205)
@@ -187,7 +245,10 @@ we create a new file called `auth-ldap.conf` in  `etc/apache2/sites-availables/`
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/2d0c5341-e1b8-498e-a209-3d9787d6c518)
 
 We only let the users in group2 (user2) access the page
-we run this command `a2ensite auth-ldap ` and restart apache2 to enable the new configuration by running `sudo systemctl restart apache2` 
+
+we run this command `a2ensite auth-ldap ` 
+
+and restart apache2 to enable the new configuration by running `sudo systemctl restart apache2` 
 
 Now, we create a new directory called `auth-ldap` in `/var/www/html/` and we create `index.html` in it 
 
