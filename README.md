@@ -1,4 +1,4 @@
-# Install and Configure OpenLDAP
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/0d0b7f9c-357d-43f8-8390-335e927d1a80)# Install and Configure OpenLDAP
 ## Install slapd and change the instance suffix
 to install the server , we run this command :
 
@@ -118,12 +118,15 @@ to see the changes we run ` ll /etc/ldap/sasl2/`
 The Domain Name System (DNS) is the phonebook of the Internet. Humans access information online through domain names, like nytimes.com or espn.com. Web browsers interact through Internet Protocol (IP) addresses. DNS translates domain names to IP addresses so browsers can load Internet resources.
 
 Each device connected to the Internet has a unique IP address which other machines use to find the device. DNS servers eliminate the need for humans to memorize IP addresses such as 192.168.1.1 (in IPv4), or more complex newer alphanumeric IP addresses such as 2400:cb00:2048:1::c629:d7a2 (in IPv6).
-------image--------
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/4c0dc6ef-e6e3-4171-97e1-9c4247e2113c)
+
 ## DNS server configuration:
 ### install Bind9: 
 The reference DNS server, BIND (Berkeley Internet Name Domain), is from the Internet Software Consortium.
 
 `sudo apt-get install bind9`
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/1d9957fe-c0e2-4aef-baa1-f01ce18f87ca)
 
 ### configuration:
 The main configuration of BIND9 is done in the following files:
@@ -131,6 +134,9 @@ The main configuration of BIND9 is done in the following files:
 /etc/bind/named.conf
 /etc/bind/named.conf.options
 /etc/bind/named.conf.local
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/3a105990-42df-4590-93fc-d9d265060a3e)
+
 
 We will configure a forwarder, which is a DNS server that will handle requests that your server cannot resolve, essentially all requests except those for the zone that we will host for our local machines.
 
@@ -140,13 +146,16 @@ To do this, we will modify named.conf.options with the command:
 
 We uncomment the forwarders block and specify, for example, the IP address of the DNS server provided by the DHCP server of your router. We have set the IP address of a Google DNS like 8.8.8.8 and 8.8.4.4
 
-------image-----
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/d8b98e5f-2b90-4f8d-9567-cb0079d3374f)
+
 
 To host our own zone as the master server, we will modify the named.conf.local file using the command:
 
 `sudo nano /etc/bind/named.conf.local`
 
-----image---
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/bc219510-69be-4138-a73d-f24d8048bf6f)
+
+
 
 Then, we need to create the file /etc/bind/local.lan to go along with it. To do this, we will copy db.local, which serves as a reference. You type:
 
@@ -155,27 +164,40 @@ Then, we need to create the file /etc/bind/local.lan to go along with it. To do 
 Edit the file with
 
 `nano /etc/bind/local.lan`
+we modify the zone. Here we define the Start Of Authority (SOA). For this, we declare ns (for Name server). We also declare a second name, root, here
+
+After defining the SOA, still ns, we also declare one or more A-type records. An A-type record allows mapping a DNS name to an IP address.
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/be6b4326-0bbd-441e-bd69-1b49829e9fe7)
 
 we need to create the file /etc/bind/inv.lan
 
-sudo cp /etc/bind/db.127 /etc/bind/inv.lan`
+`sudo cp /etc/bind/db.127 /etc/bind/inv.lan`
 
 Edit the file with
 
 `nano /etc/bind/inv.lan`
 
-Next, we modify the zone. Here we define the Start Of Authority (SOA). For this, we declare ns (for Name server). We also declare a second name, root, here
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/4a4a0ae8-65f3-4c34-aac6-e2ac0d77a05f)
 
-After defining the SOA, still ns, we also declare one or more A-type records. An A-type record allows mapping a DNS name to an IP address.
+we have also to edit /etc/resolv.conf
 
------image---
+`sudo nano /etc/resolv.conf`
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/e5f89ea9-4a78-4336-b727-4b41db1cb515)
+
 
 ### Add DNS records for OpenLDAP, Apache and OpenVPN:
 
-we have first to add zoness in named.conf.local
-image
-then records in local.lan
-image
+we have first to add zones in named.conf.local
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/28490b31-dc26-49e2-bb11-496e5ac9a1ee)
+
+
+then add records in local.lan
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/028e0621-6df8-4054-9201-d889fd7ae11e)
+
 and then w create the files apache.lan, ldap.lan and openvpn.lan using
 
 `sudo cp /etc/bind/db.127 /etc/bind/apache.lan`
@@ -188,31 +210,52 @@ edit them with:
 
 `nano /etc/bind/apache.lan`
 
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/88a795c4-e38f-4a56-a110-085efd2ae942)
+
 `nano /etc/bind/ldap.lan`
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/85d10420-5d1a-4808-a8f1-0b7c70773d80)
 
 `nano /etc/bind/openvpn.lan`
 
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/a5c956f3-58c9-453a-a111-b7f3dc0433e2)
+
+
 ## testing
-Redémarrer le démon BIND9 avec
+Restart BIND9 with
 
 `sudo service bind9 restart`
 
-De là, depuis une autre machine vous pouvez normalement tester la résolution de ns.local.lan
- Sur une machine windows, on tape dans une invite de commande
+From there, on another machine, you should be able to test the resolution of ns.local.lan. On a Windows machine, you can type in a command prompt:
 
- `nslookup`
+`nslookup`
  
- on Indique à nslookup qu'il doit utiliser votre serveur linux comme serveur dns.
-Le mien à l'ip 192.168.56.102
+We instruct nslookup to use your Linux server as the DNS server
+
 
 `server 192.168.56.102`
 
-Maintenant tentez de résoudre ns.local.lan
-
+Now, we try to resolve ns.local.lan
 
 `ns.local.lan`
 
-Ici on voit que l'ip associée à ns.local.lan a bien été trouvée et affichée
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/d2cbf987-1cb8-45ad-b998-8a88b9e82086)
+
+`apache.local.lan`
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/ad438b62-c0fc-48f1-90db-a33dbc2f95d5)
+
+`ldap.local.lan`
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/2f359581-1a18-4e2d-a8b2-408fe04ec01a)
+
+`openvpn.local.lan`
+
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/66b9fe8f-84f1-4f7a-a348-ccff71ab49ec)
+now in reverse: 
+![image](https://github.com/Nourbh17/kerberos/assets/87276542/0688848d-d218-445d-9366-e76977e73a44)
+
+
 
 # Introduction : 
 Kerberos is a network authentication protocol designed to provide secure authentication for client-server applications. The primary goal of Kerberos is to enable secure communication over a non-secure network, such as the Internet.
