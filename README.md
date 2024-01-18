@@ -426,7 +426,7 @@ now in reverse:
 ![image](https://github.com/Nourbh17/kerberos/assets/87276542/0688848d-d218-445d-9366-e76977e73a44)
 
 
-
+# Partie 3: Kerberos
 # Introduction : 
 Kerberos is a network authentication protocol designed to provide secure authentication for client-server applications. The primary goal of Kerberos is to enable secure communication over a non-secure network, such as the Internet.
 
