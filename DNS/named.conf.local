@@ -1,0 +1,35 @@
+//
+// Do any local configuration here
+//
+zone"local.lan" IN {
+     type master;
+     file "/etc/bind/db.local.lan";
+};
+
+zone"56.168.192.in-addr.arpa" IN {
+     type master;
+     file "/etc/bind/db.inv";
+};
+zone"2.0.10.in-addr.arpa" IN {
+     type master;
+     file "/etc/bind/db.ldap";
+};
+zone"5.168.192.in-addr.arpa" IN {
+     type master;
+     file "/etc/bind/db.apache";
+};
+zone"0.0.127.in-addr.arpa" IN {
+     type master;
+     file "/etc/bind/db.openvpn";
+};
+
+
+
+
+
+
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
