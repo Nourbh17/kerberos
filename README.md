@@ -122,7 +122,9 @@ Each device connected to the Internet has a unique IP address which other machin
 ## DNS server configuration:
 ### install Bind9: 
 The reference DNS server, BIND (Berkeley Internet Name Domain), is from the Internet Software Consortium.
+
 `sudo apt-get install bind9`
+
 ### configuration:
 The main configuration of BIND9 is done in the following files:
 
@@ -137,10 +139,15 @@ To do this, we will modify named.conf.options with the command:
 `sudo nano /etc/bind/named.conf.options`
 
 We uncomment the forwarders block and specify, for example, the IP address of the DNS server provided by the DHCP server of your router. We have set the IP address of a Google DNS like 8.8.8.8 and 8.8.4.4
+
 ------image-----
+
 To host our own zone as the master server, we will modify the named.conf.local file using the command:
+
 `sudo nano /etc/bind/named.conf.local`
+
 ----image---
+
 Then, we need to create the file /etc/bind/local.lan to go along with it. To do this, we will copy db.local, which serves as a reference. You type:
 
 `sudo cp /etc/bind/db.local /etc/bind/local.lan`
@@ -160,33 +167,51 @@ Edit the file with
 Next, we modify the zone. Here we define the Start Of Authority (SOA). For this, we declare ns (for Name server). We also declare a second name, root, here
 
 After defining the SOA, still ns, we also declare one or more A-type records. An A-type record allows mapping a DNS name to an IP address.
+
 -----image---
+
 ### Add DNS records for OpenLDAP, Apache and OpenVPN:
+
 we have first to add zoness in named.conf.local
 image
 then records in local.lan
 image
 and then w create the files apache.lan, ldap.lan and openvpn.lan using
+
 `sudo cp /etc/bind/db.127 /etc/bind/apache.lan`
+
 `sudo cp /etc/bind/db.127 /etc/bind/ldap.lan`
+
 `sudo cp /etc/bind/db.127 /etc/bind/openvpn.lan`
+
 edit them with:
+
 `nano /etc/bind/apache.lan`
+
 `nano /etc/bind/ldap.lan`
+
 `nano /etc/bind/openvpn.lan`
+
 ## testing
 Redémarrer le démon BIND9 avec
+
 `sudo service bind9 restart`
 
 De là, depuis une autre machine vous pouvez normalement tester la résolution de ns.local.lan
  Sur une machine windows, on tape dans une invite de commande
+
  `nslookup`
+ 
  on Indique à nslookup qu'il doit utiliser votre serveur linux comme serveur dns.
 Le mien à l'ip 192.168.56.102
+
 `server 192.168.56.102`
+
 Maintenant tentez de résoudre ns.local.lan
 
+
 `ns.local.lan`
+
 Ici on voit que l'ip associée à ns.local.lan a bien été trouvée et affichée
 
 # Introduction : 
