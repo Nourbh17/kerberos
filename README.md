@@ -119,8 +119,9 @@ to see the changes we run ` ll /etc/ldap/sasl2/`
 2-6- we edit `/etc/ldap/ldap.conf`. We run  `sudo nano /etc/ldap/ldap.conf`and we comment line
 
 `TLS_CACERT  etc/ssl/certs/ca-cerificates.crt` and we add 
-` TLS_CACERT  /etc/ldap/sasl2/ca-certificates.crt
-  TLS_REQCERT allow `
+
+    ` TLS_CACERT  /etc/ldap/sasl2/ca-certificates.crt
+      TLS_REQCERT allow `
 
   ![image](https://github.com/Nourbh17/kerberos/assets/98901671/15b68a6b-03b4-4ffa-97e8-531bad48e618)
 
@@ -131,7 +132,7 @@ to see the changes we run ` ll /etc/ldap/sasl2/`
 ### 3- Verify 
 We Verify by executing ldapsearch command : 
 
-`ldapsearch -x -H ldaps://192.168.56.103 -b "dc=example,dc=com" `
+  `ldapsearch -x -H ldaps://192.168.56.103 -b "dc=example,dc=com" `
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/65db2f4b-18e2-46b6-936d-4949450f1cf4)
 
@@ -142,7 +143,7 @@ It worked
 ## Verify user's authentication 
 to verify user1 authentication we run the following command in user1 machine and we enter user1's password
 
-  `ldapwhoami -x -D "uid=user1,ou=People,dc=example,dc=com" -W `
+    `ldapwhoami -x -D "uid=user1,ou=People,dc=example,dc=com" -W `
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/e638a3d3-082d-4d1d-a412-84a08bf2e446)
 
@@ -233,7 +234,7 @@ Now we can access to the page from a client computer with a Web browser via HTTP
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/36d0717d-1814-4f4d-a92e-f472bad68205)
 
-this screen is shown because Certificates is self-signed but it's no problem,we click on Accept the Risk and Continue 
+this screen is shown because Certificates is self-signed but it's not a problem,we click on Accept the Risk and Continue 
 
 ## Basic Authentication 
 we run this command : `a2enmod ldap authnz_ldap`
@@ -259,7 +260,7 @@ when we try to access the page with user1 (not in group2 ) :
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/752592bf-11bb-4e7e-846f-0cb441746c67)
 
-we have to re-enter the username and password cause he's not autorised to access the page 
+We have to re-enter the username and password because he's not authorized to access the page.
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/6292765a-dfdf-4385-927c-897eb1c5d1d4)
 
