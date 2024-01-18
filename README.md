@@ -1,4 +1,4 @@
-![image](https://github.com/Nourbh17/kerberos/assets/87276542/0d0b7f9c-357d-43f8-8390-335e927d1a80)# Install and Configure OpenLDAP
+# Install and Configure OpenLDAP
 ## Install slapd and change the instance suffix
 to install the server , we run this command :
 
@@ -132,7 +132,11 @@ The reference DNS server, BIND (Berkeley Internet Name Domain), is from the Inte
 The main configuration of BIND9 is done in the following files:
 
 /etc/bind/named.conf
+
+
 /etc/bind/named.conf.options
+
+
 /etc/bind/named.conf.local
 
 ![image](https://github.com/Nourbh17/kerberos/assets/87276542/3a105990-42df-4590-93fc-d9d265060a3e)
@@ -221,7 +225,7 @@ edit them with:
 ![image](https://github.com/Nourbh17/kerberos/assets/87276542/a5c956f3-58c9-453a-a111-b7f3dc0433e2)
 
 
-## testing
+## Testing
 Restart BIND9 with
 
 `sudo service bind9 restart`
@@ -252,7 +256,10 @@ Now, we try to resolve ns.local.lan
 `openvpn.local.lan`
 
 ![image](https://github.com/Nourbh17/kerberos/assets/87276542/66b9fe8f-84f1-4f7a-a348-ccff71ab49ec)
+
 now in reverse: 
+
+
 ![image](https://github.com/Nourbh17/kerberos/assets/87276542/0688848d-d218-445d-9366-e76977e73a44)
 
 
