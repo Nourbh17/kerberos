@@ -1,3 +1,11 @@
+Made by : 
+Ben Hnia Intidhar
+Abdelkefi Farah
+Ben Hajla Nour 
+
+
+
+
 # Install and Configure OpenLDAP
 ## Install slapd and change the instance suffix
 to install the server , we run this command :
