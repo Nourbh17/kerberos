@@ -2,28 +2,30 @@
 ## Install slapd and change the instance suffix
 to install the server , we run this command :
 
-  `sudo apt install slapd ldap-utils`
+    sudo apt install slapd ldap-utils
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/990b96e0-b326-4e48-b1b6-2a206ffe1ceb)
 
 
-to change the Directory Information Tree suffix , we run the following command : 
-
-  `sudo dpkg-reconfigure slapd`    we used dc=example,dc=com
+to change the Directory Information Tree (DIT) suffix , we run the following command : 
+    
+    sudo dpkg-reconfigure slapd`    
+    
+we used dc=example,dc=com
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/e3ec1c7a-e249-45e3-ba55-9cd6a9d9a471)
 
 ## Create Users and Groups 
 We create the following file called add-users.ldif : 
 
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/3aec309c-3459-4adf-a5bb-eabdb79ba1a1)
 
 
 Now to implement the change, we run the below command : 
 
-  `ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-users.ldif `
+    ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-users.ldif 
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/b55d0437-b902-430f-9c30-c8c966e926ac)
-
 
 Users have been added to the server .
 
@@ -35,7 +37,7 @@ We create the file called add-groups.ldif file
 
 we run this command to implement the change : 
 
-  `ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-groups.ldif `
+    ldapadd -x -D cn=admin,dc=example,dc=com -W -f add-groups.ldif 
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/ba9b37a1-83d2-4b61-8f02-341304a8fded)
 
@@ -48,47 +50,82 @@ To modify a user , we create a file called modify-user.ldif:
 
 To implement the changes , we run the following command : 
 
-  `ldapmodify -x -D cn=admin,dc=example,dc=com -W -f modify-user.ldif`
+     ldapmodify -x -D cn=admin,dc=example,dc=com -W -f modify-user.ldif
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/752dfd05-e2a8-4108-93cc-80a7ea1e666e)
 
+## Add certificates to users
+We create a directory for certificates authority 
 
-## Certificats
+    mkdir ~/projet/ldap/auth
+
+we generate CA certificate 
+
+    openssl genrsa -out ca.priv 2048
+    openssl rsa -in ca.priv -pubout -out ca.pub
+    openssl req -x509 -new -days 3650 -key ca.priv -out ca.cert
+
+Now we generate certificates for users and sign them 
+
+    mkdir ~/projet/ldap/clients && cd ~/projet/ldap/clients
+    openssl genrsa -out user1.priv 2048
+    openssl rsa -in user1.priv -pubout -out user1.pub
+    openssl req -new -key user1.priv -out user1.csr
+
+    openssl genrsa -out user2.priv 2048
+    openssl rsa -in user2.priv -pubout -out user2.pub
+    openssl req -new -key user2.priv -out user2.csr
+
+    cd ~/projet/ldap/auth
+    openssl x509 -req -in ~/projet/ldap/clients/user1.csr -CA ca.cert -CAkey ca.priv -CAcreateserial -out     ~/projet/ldap/clients/user1.cert -days 3650
+    openssl x509 -req -in ~/projet/ldap/clients/user2.csr -CA ca.cert -CAkey ca.priv -CAcreateserial -out ~/projet/ldap/clients/user2.cert -days 3650 
+
+  ![image](https://github.com/Nourbh17/kerberos/assets/98901671/046fc1ad-eeb8-4a0f-a7ba-0ffb70940b0a)
+  
+## LDAPS
 ### 1- Generate Self Signed SSL certificates
 1-1- First we create the key by running the following command 
 
-  `openssl genrsa -aes128 -out example.com.key 4096 `  
+    openssl genrsa -aes128 -out example.com.key 4096   
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/80caf028-5c15-43ac-a974-6f1d8c80b51c)
 
 
 1-2- Now to remove the passphrase from the generated private key we run 
 
-  `openssl rsa -in example.com.key -out example.com.key`
+    openssl rsa -in example.com.key -out example.com.key
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/e61fad10-6d04-4f0e-8271-15fd5c8b51d3)
 
 
 1-3- Now we generate the request : 
 
-  `openssl req -new -days 3650 -key example.com.key -out example.com.csr`
+    openssl req -new -days 3650 -key example.com.key -out example.com.csr
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/ab708dbd-ebc7-4409-8703-cb223b52c495)
 
 
 1-4- finally, we sign the certificate by running this command : 
 
-  `sudo openssl x509 -in example.com.csr -out example.com.crt -req -signkey example.com.key -days 3650`
+      sudo openssl x509 -in example.com.csr -out example.com.crt -req -signkey example.com.key -days 3650
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/99a9827f-ac0a-4f65-99b5-a568f44e185e)
+
+To add ther certificates to user , we install LDAP Acount Manager LAM /
+
+    sudo apt -y install ldap-account-manager
+
+We access the LAM management interface in your browser http://localhost/lam and we add the generated certificates 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/7be99581-d20e-4d92-bf3c-bde4ffeb92d7)
 
 
 ### 2- Configure SSL on openLDAP Server 
 2-1- Now let's copy the certificates and key to `/etc/ldap/sasl2` directory : 
 We run 
 
-  `sudo cp example.com.{key,crt} /etc/ldap/sasl2/
-   sudo cp /etc/ssl/certs/ca-certificates.crt /etc/ldap/sasl2`
+     sudo cp example.com.{key,crt} /etc/ldap/sasl2/
+     sudo cp /etc/ssl/certs/ca-certificates.crt /etc/ldap/sasl2`
    
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/b245f724-d024-4055-9546-760f51a032f6)
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/7bb7d01c-82d7-44cd-ad28-c0c9b54f7a95)
@@ -96,9 +133,10 @@ We run
 
 2-2- Now we change Ownership of the certificate to openldap User . We run this command
 
-  `sudo chown -R openldap:openldap /etc/ldap/sasl2/`
+    sudo chown -R openldap:openldap /etc/ldap/sasl2/
 
-to see the changes we run ` ll /etc/ldap/sasl2/`
+to see the changes we run 
+    ll /etc/ldap/sasl2/
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/40e77e31-311e-41b4-94c8-39d7c17d48d6)
 
@@ -108,31 +146,39 @@ to see the changes we run ` ll /etc/ldap/sasl2/`
 
 2-4- To configure LDAP Server to use SSL Certificates , We run :
 
-  `sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SSL-LDAP.ldif`
+    sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SSL-LDAP.ldif
   
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/fa36a709-86a7-4c8b-850e-c41a1c10563b)
 
-2-5- we edit `/etc/default/slapd`.We run  `sudo nano /etc/default/slapd` and we add `ldaps:///` to `SLAPD_SERVICES`
+2-5- we edit `/etc/default/slapd`.We run  
+
+    sudo nano /etc/default/slapd 
+    
+and we add `ldaps:///` to `SLAPD_SERVICES`
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/c3ffcb29-ebf7-4928-92d3-e2b3617f4478)
 
-2-6- we edit `/etc/ldap/ldap.conf`. We run  `sudo nano /etc/ldap/ldap.conf`and we comment line
+2-6- we edit `/etc/ldap/ldap.conf`. We run  
+  
+    sudo nano /etc/ldap/ldap.conf 
 
-`TLS_CACERT  etc/ssl/certs/ca-cerificates.crt` and we add 
+and we comment line `TLS_CACERT  etc/ssl/certs/ca-cerificates.crt` and we add 
 
-    ` TLS_CACERT  /etc/ldap/sasl2/ca-certificates.crt
-      TLS_REQCERT allow `
+      TLS_CACERT  /etc/ldap/sasl2/ca-certificates.crt
+      TLS_REQCERT allow 
 
-  ![image](https://github.com/Nourbh17/kerberos/assets/98901671/15b68a6b-03b4-4ffa-97e8-531bad48e618)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/15b68a6b-03b4-4ffa-97e8-531bad48e618)
 
-  Finally ,We restart LDAP Server : `sudo systemctl restart slapd`
+Finally ,We restart LDAP Server : 
+    
+    sudo systemctl restart slapd
 
- ![image](https://github.com/Nourbh17/kerberos/assets/98901671/6227087a-c28c-4ca2-b372-ff02b78c76ab)
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/6227087a-c28c-4ca2-b372-ff02b78c76ab)
 
 ### 3- Verify 
 We Verify by executing ldapsearch command : 
 
-  `ldapsearch -x -H ldaps://192.168.56.103 -b "dc=example,dc=com" `
+    ldapsearch -x -H ldaps://192.168.56.103 -b "dc=example,dc=com" 
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/65db2f4b-18e2-46b6-936d-4949450f1cf4)
 
@@ -141,13 +187,51 @@ We Verify by executing ldapsearch command :
 It worked 
 
 ## Verify user's authentication 
-to verify user1 authentication we run the following command in user1 machine and we enter user1's password
+### Step 1: Install the necessary LDAP client packages on the client machine and configure the server's IP address:
 
-    `ldapwhoami -x -D "uid=user1,ou=People,dc=example,dc=com" -W `
+    sudo apt-get install ldap-utils libpam-ldap libnss-ldap
 
-![image](https://github.com/Nourbh17/kerberos/assets/98901671/e638a3d3-082d-4d1d-a412-84a08bf2e446)
+### Step 2: Configure /etc/nsswitch.conf
+Edit the `/etc/nsswitch.conf ` file to include LDAP in the data sources for name resolution:
+
+    sudo nano /etc/nsswitch.conf
+
+Make sure the following lines include "ldap":
+
+
+    passwd:         compat ldap
+    group:          compat ldap
+    shadow:         compat ldap
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/01fa1581-928c-4e3a-8784-693b0c9dc8ec)
+    
+### Step 3: Configure /etc/pam.d/common-session
+Edit the `/etc/pam.d/common-session ` file to include LDAP session:
+
+    sudo nano /etc/pam.d/common-session
+
+Add the following line:
+
+    session required pam_mkhomedir.so skel=/etc/skel/ umask=077
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/cab4ca9f-65f7-4401-a250-9e52a5e9d1e6)
+
+### Step 4: Restart services
+
+    sudo systemctl restart nscd
+    sudo systemctl restart nslcd
+
+### Step 5: Ensure that users can successfully authenticate on the OpenLDAP server:
+
+
+    sudo login
+    # Enter the UID
+    # Enter the password
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/c981eaa3-6974-42b5-a875-c121718c41bd)
 
 # SSH Authentication
+<!--
 ## 1- Update schema to enable sshPublicKey attribute 
 Since we will implement key based authentication, we need an attribute that can store public key of the user. There is no attribute available by default to store the public key. Hence we need to define a schema for the same and create an attribute to store the key.
 
@@ -157,14 +241,14 @@ First , We create a file named openssh-lpk.ldif :
 
 then we run the below command to implement the change : 
 
-  `sudo ldapadd -Y EXTERNAL -H ldapi:/// -f openssh-lpk.ldif`
+    sudo ldapadd -Y EXTERNAL -H ldapi:/// -f openssh-lpk.ldif
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/7bb611b2-169e-4dd2-9d12-980754274478)
 
 We have created an attribute named ‘ldapPublicKey’ to store the ssh public key of the users.
 
 ## 2- Update user entry with ldapPublicKey
-We create a file named add-sshPublicKey.ldif
+ We create a file named add-sshPublicKey.ldif
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/1223bf70-99f1-4f00-a6af-33fe57b3a00c)
 
@@ -175,36 +259,48 @@ Then we run this command  `sudo ldapmodify -x -D cn=admin,dc=example,dc=com -W -
 We have added the user ssh keys as part of sshPublicKey attribute.
 
 We have everything configured at LDAP server end and we are good to configure our Linux client now.
-## 3- Configure Linux Client
-Run the below commands to install the necessary packages in Linux Client.
+## 3- Configure the client machine -->
+Run the below commands to install the necessary packages i
 
-`sudo apt-get install openssh-server libpam-ldap`
+    sudo apt-get install openssh-server libpam-ldap
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/eb2d3930-7fbb-48bf-913a-3ae548db23e0)
 
-then we edit `sshd_config` in `/etc/ssh/` by running  `sudo nano /etc/ssh/sshd_config`
+then we edit `sshd_config` in `/etc/ssh/` by running  
+
+    sudo nano /etc/ssh/sshd_config
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/56334a75-c156-4c1c-b34b-68a768832f46)
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/bc0a3825-6ef2-40a1-9913-db0674dfb6af)
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/a3d88c04-e653-455f-afb3-6f8a9e0395a3)
 
-and we edit `sshd` in `/etc/pam/` by running  `sudo nano  /etc/pam.d/sshd`
+and we edit `sshd` in `/etc/pam/` by running  
+    
+    sudo nano  /etc/pam.d/sshd
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/db17ef84-4009-4a0d-917a-76a1d8f3d9d5)
 
-and we edit `access.conf` in `/etc/security/` by running  `sudo nano /etc/security/access.conf`
+and we edit `access.conf` in `/etc/security/` by running  
+
+    sudo nano /etc/security/access.conf
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/d1b6cca5-6ba1-4062-93c0-a4a8584e686b)
 
-restart ssh to enable the new configuration by running `sudo systemctl restart ssh`
+restart ssh to enable the new configuration by running 
+    
+    sudo systemctl restart ssh
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/03dc78a8-7843-43d3-99d1-89549d3ae501)
+
 ## 4- Test 
 then we try to test SSH access for an authorized user and an unauthorized user by running these commands in the clients machines 
 
-  `ssh user1@192.168.56.103`
+    ssh username@your_server_ip
 
-  `ssh user2@192.168.56.103`
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/6a3ec739-04cc-44a0-9719-494b6bcaedc0)
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/c15c8a20-b37c-4ad9-b230-e75c513f8a5b)
+
   
 # Apache Integration 
 ## Install and configure Apache2 
@@ -224,11 +320,12 @@ to `/etc/apache2/sites-available/default-ssl.conf` file
 
  then we run this commands 
  
-     `a2ensite default-ssl`
-   
-    `a2enmod ssl`
+    a2ensite default-ssl
+    a2enmod ssl
     
-To activate the new configuration , we run ` sudo systemctl restart apache2`.
+To activate the new configuration , we run 
+    
+    sudo systemctl restart apache2
 
 Now we can access to the page from a client computer with a Web browser via HTTPS.
 
@@ -237,7 +334,9 @@ Now we can access to the page from a client computer with a Web browser via HTTP
 this screen is shown because Certificates is self-signed but it's not a problem,we click on Accept the Risk and Continue 
 
 ## Basic Authentication 
-we run this command : `a2enmod ldap authnz_ldap`
+we run this command : 
+
+    a2enmod ldap authnz_ldap
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/b336c869-8526-463e-89fa-049c61952aac)
 
@@ -247,9 +346,13 @@ we create a new file called `auth-ldap.conf` in  `etc/apache2/sites-availables/`
 
 We only let the users in group2 (user2) access the page
 
-we run this command `a2ensite auth-ldap ` 
+we run this command 
 
-and restart apache2 to enable the new configuration by running `sudo systemctl restart apache2` 
+    a2ensite auth-ldap 
+
+and restart apache2 to enable the new configuration by running 
+
+    sudo systemctl restart apache2
 
 Now, we create a new directory called `auth-ldap` in `/var/www/html/` and we create `index.html` in it 
 
@@ -273,7 +376,39 @@ we access it with user2
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/f1160ec3-b6a9-4c76-a856-b00a2a2df435)
 
 # OpenVpn 
+Make sure to install OpenVPN on your Ubuntu server:
 
+    sudo apt update
+    sudo apt install openvpn
+
+Edit the /etc/pam.d/openvpn file:
+
+    auth requisite pam_unix.so
+    auth required pam_ldap.so
+    account requisite pam_unix.so
+    account required pam_ldap.so
+
+Restart the OpenVPN and LDAP services to apply the changes:
+
+    sudo systemctl restart openvpn
+    sudo systemctl restart slapd
+
+we write the server Configuration : server.ovpn 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/11a2f8a9-7525-4b1f-9abf-e99a547134e3)
+
+We run 
+
+    sudo openvpn --config server.ovpn
+    
+we write the client Configuration : user1.ovpn
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/58dd9aea-e050-4ead-b4dd-1a9dd30b1d9b)
+
+We run 
+
+    sudo openvpn --config user1.ovpn
+ 
 
 
 # Partie 2 : Gestion des Services Réseau avec DNS : 
