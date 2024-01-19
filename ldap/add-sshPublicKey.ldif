@@ -1,0 +1,10 @@
+dn: uid=user1,ou=people,dc=example,dc=com
+changetype: modify
+replace: objectClass
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: top
+objectClass: ldapPublicKey
+-
+replace: sshPublicKey
+sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHEIEDrtdYKwwQpiDDyQdQ3VAqEK0PqdroBOqvtbNuOD3k1fx8PpRjE2pODMlNe+RU6vkLlgPrv5TJKchzbAN/7AepuKeprq6NrgLpyUlLAlJtqUaX0PRI8uPiRHAdrfKaZLGGzqs0ZDEpRb+oag+4qvwQy9cCSCFhJOzCBnYBxl9rroUgrg8pnUt6Y4zpMADRhCVK1ZG+6Vb45//z2tHmcY5ofeFjt3aAy/SPMUKmnkfluOEjKWrMCSYTA98HIXwpd3EQc8WA3kxQVwc3HyE2/fdkmJQe614rXkq44ic42rKkqAvs9SKr/EZQJ+B4Ng8nnvNFU33mBtwt4RNMVzJN user1@farah-VirtualBox

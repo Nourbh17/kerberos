@@ -1,0 +1,20 @@
+# modify_users.ldif
+# Modification pour l'utilisateur user1
+dn: uid=user1,ou=people,dc=example,dc=com
+changetype: modify
+replace: objectClass
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: top
+-
+add: uidNumber
+uidNumber: 6003
+-
+add: gidNumber
+gidNumber: 6002
+-
+add: homeDirectory
+homeDirectory: /home/farah
+-
+add: loginShell
+loginShell: /bin/bash
