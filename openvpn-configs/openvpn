@@ -1,0 +1,4 @@
+auth	requisite	pam_unix.so
+auth	required	pam_ldap.so
+account	requisite	pam_unix.so
+account	required	pam_ldap.so
