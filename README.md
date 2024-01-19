@@ -81,6 +81,15 @@ Now we generate certificates for users and sign them
     openssl x509 -req -in ~/projet/ldap/clients/user2.csr -CA ca.cert -CAkey ca.priv -CAcreateserial -out ~/projet/ldap/clients/user2.cert -days 3650 
 
   ![image](https://github.com/Nourbh17/kerberos/assets/98901671/046fc1ad-eeb8-4a0f-a7ba-0ffb70940b0a)
+
+To add ther certificates to user , we install LDAP Acount Manager LAM /
+
+    sudo apt -y install ldap-account-manager
+
+We access the LAM management interface in your browser http://localhost/lam and we add the generated certificates 
+
+![image](https://github.com/Nourbh17/kerberos/assets/98901671/7be99581-d20e-4d92-bf3c-bde4ffeb92d7)
+
   
 ## LDAPS
 ### 1- Generate Self Signed SSL certificates
@@ -110,15 +119,6 @@ Now we generate certificates for users and sign them
       sudo openssl x509 -in example.com.csr -out example.com.crt -req -signkey example.com.key -days 3650
 
 ![image](https://github.com/Nourbh17/kerberos/assets/98901671/99a9827f-ac0a-4f65-99b5-a568f44e185e)
-
-To add ther certificates to user , we install LDAP Acount Manager LAM /
-
-    sudo apt -y install ldap-account-manager
-
-We access the LAM management interface in your browser http://localhost/lam and we add the generated certificates 
-
-![image](https://github.com/Nourbh17/kerberos/assets/98901671/7be99581-d20e-4d92-bf3c-bde4ffeb92d7)
-
 
 ### 2- Configure SSL on openLDAP Server 
 2-1- Now let's copy the certificates and key to `/etc/ldap/sasl2` directory : 
